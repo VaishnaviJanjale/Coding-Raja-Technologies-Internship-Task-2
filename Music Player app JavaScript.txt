@@ -1,0 +1,57 @@
+let audioPlayer = document.getElementById('audioPlayer');
+let progressBar = document.getElementById('progressBar');
+let playlist = ['song1.mp3', 'song2.mp3', 'song3.mp3'];
+let currentIndex = 0;
+let isShuffle = false;
+let isRepeat = false;
+
+audioPlayer.addEventListener('timeupdate', updateProgress);
+
+function playSong(song) {
+    audioPlayer.src = song;
+    audioPlayer.play();
+}
+
+function playPause() {
+    if (audioPlayer.paused) {
+        audioPlayer.play();
+    } else {
+        audioPlayer.pause();
+    }
+}
+
+function nextSong() {
+    if (isShuffle) {
+        currentIndex = Math.floor(Math.random() * playlist.length);
+    } else {
+        currentIndex = (currentIndex + 1) % playlist.length;
+    }
+    playSong(playlist[currentIndex]);
+}
+
+function previousSong() {
+    currentIndex = (currentIndex - 1 + playlist.length) % playlist.length;
+    playSong(playlist[currentIndex]);
+}
+
+function toggleShuffle() {
+    isShuffle = !isShuffle;
+    alert('Shuffle: ' + (isShuffle ? 'On' : 'Off'));
+}
+
+function toggleRepeat() {
+    isRepeat = !isRepeat;
+    audioPlayer.loop = isRepeat;
+    alert('Repeat: ' + (isRepeat ? 'On' : 'Off'));
+}
+
+function setVolume(value) {
+    audioPlayer.volume = value;
+}
+
+function updateProgress() {
+    let progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+    progressBar.style.width = progress + '%';
+}
+
+audioPlayer.addEventListener('ended', nextSong);
